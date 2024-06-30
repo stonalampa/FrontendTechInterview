@@ -1,0 +1,48 @@
+.profile-container {
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+}
+
+.profile-info .avatar {
+    margin-right: 20px;
+    border-radius: 50%;
+}
+
+.logout-button {
+    background-color: #ff4b5c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.logout-button:hover {
+    background-color: #ff1f33;
+}
+
+h2 {
+    margin-top: 20px;
+}
+
+.carousel .slide img {
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 10px;
+}
