@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useStore } from "../store/store";
 import axios from "axios";
@@ -11,6 +11,7 @@ const Login = () => {
     const setIsLogged = useStore((state) => state.setIsLogged);
     const setJwtToken = useStore((state) => state.setJwtToken);
     const setStoreEmail = useStore((state) => state.setEmail);
+    const [isFormValid, setIsFormValid] = useState(false);
     const navigate = useNavigate();
 
     const handleLogin = async () => {
@@ -35,6 +36,15 @@ const Login = () => {
         }
     };
 
+    const validateEmail = (email: string) => {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(String(email).toLowerCase());
+    };
+
+    useEffect(() => {
+        setIsFormValid(validateEmail(email) && password !== "");
+    }, [email, password]);
+
     const handleRedirectToRegister = () => {
         navigate("/register");
     };
@@ -50,6 +60,7 @@ const Login = () => {
                     id="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    required
                 />
             </div>
             <div className="input-group">
@@ -60,6 +71,7 @@ const Login = () => {
                         id="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        required
                     />
                     <span
                         className="password-toggle"
@@ -69,7 +81,9 @@ const Login = () => {
                     </span>
                 </div>
             </div>
-            <button onClick={handleLogin}>Login</button>
+            <button onClick={handleLogin} disabled={!isFormValid}>
+                Login
+            </button>
             <button onClick={handleRedirectToRegister}>Register</button>
         </div>
     );
