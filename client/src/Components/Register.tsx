@@ -1,10 +1,13 @@
+import axios from "axios";
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useSnackbar } from "notistack";
 import { useStore } from "../store/store";
+import { config } from "../config";
 import "../style/Register.css";
 
 const Register = () => {
+    const { enqueueSnackbar } = useSnackbar();
     const [formData, setFormData] = useState<{
         firstName: string;
         lastName: string;
@@ -49,7 +52,7 @@ const Register = () => {
             }
 
             const response = await axios.post(
-                "http://localhost:3000/api/register",
+                `${config.apiUrl}/register`,
                 formDataWithFiles,
                 {
                     headers: {
@@ -60,8 +63,13 @@ const Register = () => {
 
             console.log("Registration successful!", response.data);
             navigate("/");
-        } catch (error) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
             console.error("Error during registration:", error);
+            enqueueSnackbar(`${error.message}`, {
+                variant: "error",
+                autoHideDuration: 3000,
+            });
         }
     };
 

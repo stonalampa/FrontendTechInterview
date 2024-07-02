@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import { useSnackbar } from "notistack";
 import { useStore } from "../store/store";
+import { config } from "../config";
 import axios from "axios";
 import "../style/Login.css";
 
 const Login = () => {
+    const { enqueueSnackbar } = useSnackbar();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -16,13 +19,10 @@ const Login = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post(
-                "http://localhost:3000/api/login",
-                {
-                    email,
-                    password,
-                }
-            );
+            const response = await axios.post(`${config.apiUrl}}/login`, {
+                email,
+                password,
+            });
 
             if (response.data.token) {
                 console.log("Login successful!", response.data);
@@ -31,8 +31,13 @@ const Login = () => {
                 setStoreEmail(email);
                 navigate("/profile");
             }
-        } catch (error) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
             console.error("Error during login:", error);
+            enqueueSnackbar(`${error.message}`, {
+                variant: "error",
+                autoHideDuration: 3000,
+            });
         }
     };
 

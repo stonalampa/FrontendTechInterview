@@ -5,8 +5,11 @@ import { Navigate } from "react-router-dom";
 import { Carousel } from "react-responsive-carousel";
 import { useStore } from "../store/store";
 import "../style/Profile.css";
+import { config } from "../config";
+import { useSnackbar } from "notistack";
 
 const Profile = () => {
+    const { enqueueSnackbar } = useSnackbar();
     const [user, setUser] = useState<{
         fullName: string;
         avatar: string;
@@ -24,7 +27,7 @@ const Profile = () => {
             const email = useStore.getState().email;
             const token = useStore.getState().jwtToken;
             const response = await axios.get(
-                `http://localhost:3000/api/user?email=${email}`,
+                `${config.apiUrl}/user?email=${email}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -32,8 +35,14 @@ const Profile = () => {
                 }
             );
             setUser(response.data);
-        } catch (error) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
             console.error("Error fetching user:", error);
+            console.error("Error during login:", error);
+            enqueueSnackbar(`${error.message}`, {
+                variant: "error",
+                autoHideDuration: 3000,
+            });
         } finally {
             setLoading(false);
         }
